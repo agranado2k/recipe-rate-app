@@ -20,4 +20,18 @@ class RecipesController < ApplicationController
   rescue
     render json: nil, status: :not_found
   end
+
+  def create
+    Recipe.create!(recipe_params)
+
+    render json: nil, status: :created
+  rescue
+    render json: nil, status: :bad_request
+  end
+
+  private
+
+  def recipe_params
+    params.require(:recipe).permit!
+  end
 end

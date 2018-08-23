@@ -1,6 +1,27 @@
 require 'rails_helper'
 
 RSpec.describe RecipesController, type: :controller do
+  context 'POST /v1/recipes' do
+    let(:recipe_attrs) { { title: 'Some recipe', recipe_cuisine: 'italian'  } }
+    before do
+      Timecop.freeze(Time.zone.now)
+      post :create, params: { recipe: recipe_attrs }
+    end
+    after { Timecop.return }
+
+    it 'returns HTTP statsu 201' do
+      expect(response).to have_http_status 201
+    end
+
+    context 'with invalid attr' do
+      let(:recipe_attrs) { { invalid_attr: 'invalid' } }
+
+      it 'returns HTTP statsu 400' do
+        expect(response).to have_http_status 400
+      end
+    end
+  end
+
   context 'GET /v1/recipes/:id' do
     let(:recipe_id) { 1 }
     before do
@@ -29,7 +50,6 @@ RSpec.describe RecipesController, type: :controller do
         expect(body).to eq(JSON.parse(@recipe.to_json))
       end
     end
-
   end
 
   context 'GET /v1/recipes' do
