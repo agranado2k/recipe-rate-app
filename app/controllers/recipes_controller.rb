@@ -12,4 +12,12 @@ class RecipesController < ApplicationController
 
     render json: recipes, status: :ok
   end
+
+  def show
+    recipe = Recipe.find(params[:id])
+
+    render json: recipe, status: :ok
+  rescue
+    render json: nil, status: :not_found
+  end
 end

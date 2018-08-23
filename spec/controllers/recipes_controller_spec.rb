@@ -1,6 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe RecipesController, type: :controller do
+  context 'GET /v1/recipes/:id' do
+    let(:recipe_id) { 1 }
+    before do
+      Timecop.freeze(Time.zone.now)
+      @recipe = create(:recipe, id: recipe_id)
+    end
+    after { Timecop.return }
+
+    context 'recipe not found' do
+      before { get :show, params: { id: 'invalid_id'} }
+      it 'returns HTTP statsu 404' do
+        expect(response).to have_http_status 404
+      end
+    end
+
+    context 'recipe found' do
+      before { get :show, params: { id: recipe_id } }
+
+      it 'returns HTTP statsu 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'return the recipe' do
+        body = JSON.parse(response.body)
+
+        expect(body).to eq(JSON.parse(@recipe.to_json))
+      end
+    end
+
+  end
+
   context 'GET /v1/recipes' do
     let(:page) { nil }
     let(:limit) { nil }
