@@ -17,7 +17,7 @@ class RecipesController < ApplicationController
     recipe = Recipe.find(params[:id])
 
     render json: recipe, status: :ok
-  rescue
+  rescue ActiveRecord::RecordNotFound
     render json: nil, status: :not_found
   end
 
@@ -25,7 +25,18 @@ class RecipesController < ApplicationController
     Recipe.create!(recipe_params)
 
     render json: nil, status: :created
-  rescue
+  rescue ActiveModel::UnknownAttributeError
+    render json: nil, status: :bad_request
+  end
+
+  def update
+    recipe = Recipe.find(params[:id])
+    recipe.update_attributes(recipe_params)
+
+    render json: recipe, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: nil, status: :not_found
+  rescue ActiveModel::UnknownAttributeError
     render json: nil, status: :bad_request
   end
 

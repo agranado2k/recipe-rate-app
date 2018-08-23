@@ -1,6 +1,43 @@
 require 'rails_helper'
 
 RSpec.describe RecipesController, type: :controller do
+  context 'PUT /v1/recipes/:id' do
+    let(:recipe_id) { 1 }
+    let(:recipe_attrs) { { title: 'New title' } }
+    before do
+      Timecop.freeze(Time.zone.now)
+      @recipe = create(:recipe, id: 1, title: 'Old title')
+      put :update, params: { id: recipe_id, recipe: recipe_attrs }
+    end
+    after { Timecop.return }
+
+    it 'returns HTTP statsu 200' do
+      expect(response).to have_http_status 200
+    end
+
+    it 'return recipe with field updated' do
+      body = JSON.parse(response.body)
+
+      expect(body['title']).to eq(recipe_attrs[:title])
+    end
+
+    context 'with invalid attr' do
+      let(:recipe_attrs) { { invalid_attr: 'invalid' } }
+
+      it 'returns HTTP statsu 400' do
+        expect(response).to have_http_status 400
+      end
+    end
+
+    context 'recipe not found' do
+      let(:recipe_id) { 'invalid_id' }
+
+      it 'returns HTTP statsu 404' do
+        expect(response).to have_http_status 404
+      end
+    end
+  end
+
   context 'POST /v1/recipes' do
     let(:recipe_attrs) { { title: 'Some recipe', recipe_cuisine: 'italian'  } }
     before do
