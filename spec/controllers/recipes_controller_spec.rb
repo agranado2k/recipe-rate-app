@@ -4,9 +4,13 @@ RSpec.describe RecipesController, type: :controller do
   context 'GET /v1/recipes' do
     let(:page) { nil }
     let(:limit) { nil }
-    let(:params) { { page: page, limit: limit } }
+    let(:filter) { { recipe_cuisine: 'italian' } }
+    let(:params) { { page: page, limit: limit, filter: filter } }
     before do
-      7.times { create(:recipe) }
+      18.times { create(:recipe, recipe_cuisine: 'italian') }
+      3.times { create(:recipe, recipe_cuisine: 'british') }
+      6.times { create(:recipe, recipe_cuisine: 'asian') }
+      2.times { create(:recipe, recipe_cuisine: 'brazilian') }
 
       get :index, params: params
     end
@@ -15,24 +19,42 @@ RSpec.describe RecipesController, type: :controller do
       expect(response).to have_http_status 200
     end
 
-    it 'return users' do
-      body = JSON.parse(response.body)
+    context 'when there is no filter for cuisine' do
+      let(:filter) { nil }
 
-      expect(body.size).to eq(7)
+      it 'return HTTP status 400' do
+        expect(response).to have_http_status 400
+      end
     end
 
-    context 'returns all users' do
-      let(:limit) { 5 }
+    it 'return recipes' do
+      body = JSON.parse(response.body)
 
-      it 'return users page 1 (default)' do
+      expect(body.size).to eq(18)
+    end
+
+    context 'returns all recipes' do
+      let(:limit) { 10 }
+
+      it 'return recipes page 1 (default)' do
         body = JSON.parse(response.body)
 
-        expect(body.size).to eq(5)
+        expect(body.size).to eq(10)
       end
 
       context 'page 2' do
         let (:page) { 2 }
-        it 'return users from page 2 ' do
+        it 'return recipes from page 2 ' do
+          body = JSON.parse(response.body)
+
+          expect(body.size).to eq(8)
+        end
+      end
+
+      context 'filter by recipe_cuisine' do
+        let(:filter) { { recipe_cuisine: 'brazilian' } }
+
+        it 'brazilian recipes' do
           body = JSON.parse(response.body)
 
           expect(body.size).to eq(2)
