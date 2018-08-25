@@ -5,3 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+require 'csv'
+require 'json'
+data = File.open('./recipe-data.csv').read
+
+csv = CSV.new(data, :headers => true, :header_converters => :symbol, :converters => :all)
+recipes = csv.to_a.map {|row| row.to_hash }
+
+recipes.each { |recipe| Recipe.create!(recipe) }
