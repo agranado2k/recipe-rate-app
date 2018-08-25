@@ -92,7 +92,7 @@ RSpec.describe RecipesController, type: :controller do
   context 'GET /v1/recipes' do
     let(:page) { nil }
     let(:limit) { nil }
-    let(:filter) { { recipe_cuisine: 'italian' } }
+    let(:filter) { 'italian' }
     let(:params) { { page: page, limit: limit, filter: filter } }
     before do
       18.times { create(:recipe, recipe_cuisine: 'italian') }
@@ -112,6 +112,12 @@ RSpec.describe RecipesController, type: :controller do
 
       it 'return HTTP status 400' do
         expect(response).to have_http_status 400
+      end
+
+      it 'return message error' do
+        body = JSON.parse(response.body)
+
+        expect(body['error']).to eq({ 'message' => 'one of the type are require as filter value (italian, british, asian, brazilian)' })
       end
     end
 
@@ -140,7 +146,7 @@ RSpec.describe RecipesController, type: :controller do
       end
 
       context 'filter by recipe_cuisine' do
-        let(:filter) { { recipe_cuisine: 'brazilian' } }
+        let(:filter) { 'brazilian' }
 
         it 'brazilian recipes' do
           body = JSON.parse(response.body)

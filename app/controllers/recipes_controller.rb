@@ -2,13 +2,13 @@ class RecipesController < ApplicationController
   def index
     limit = params[:limit].present? ? params[:limit].to_i : 30
     page = params[:page].present? ? params[:page].to_i : 1
-    filters = params[:filter].present? ? params[:filter].permit(:recipe_cuisine) : nil
+    filters = params[:filter].present? ? params[:filter] : nil
 
-    return render json: {}, status: :bad_request unless filters
+    return render json: filter_error_message, status: :bad_request unless filters
 
     offset = (page- 1) * limit
     recipes = Recipe.limit(limit).offset(offset)
-    recipes = recipes.where(filters) if filters
+    recipes = recipes.where(recipe_cuisine: filters) if filters
 
     render json: recipes, status: :ok
   end
@@ -44,5 +44,10 @@ class RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit!
+  end
+
+  def filter_error_message
+    cuisines = Recipe.select(:recipe_cuisine).distinct.pluck(:recipe_cuisine)
+    { error: { message: "one of the type are require as filter value (#{cuisines.join(', ')})" } }
   end
 end
