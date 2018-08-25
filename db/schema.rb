@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_23_122035) do
+ActiveRecord::Schema.define(version: 2018_08_25_001147) do
+
+  create_table "rates", force: :cascade do |t|
+    t.integer "recipe_id"
+    t.integer "rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_rates_on_recipe_id"
+  end
 
   create_table "recipes", force: :cascade do |t|
     t.string "box_type"
@@ -38,6 +46,7 @@ ActiveRecord::Schema.define(version: 2018_08_23_122035) do
     t.integer "gousto_reference"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "rate"
   end
 
 end

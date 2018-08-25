@@ -1,5 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Recipe, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe '#update_rate' do
+    let(:recipe) { create(:recipe) }
+    let(:rate) { create(:rate, rate: 4, recipe: recipe) }
+
+    it 'update the recipe rate' do
+      recipe.update_rate(rate)
+
+      expect(recipe.rate).to eq(4)
+    end
+  end
 end
