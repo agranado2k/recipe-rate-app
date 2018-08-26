@@ -4,13 +4,13 @@ class RecipesController < ApplicationController
     page = params[:page].present? ? params[:page].to_i : 1
     cuisine = params[:cuisine].present? ? params[:cuisine] : nil
 
-    return render json: cuisine_filter_error_message, status: :bad_request unless cuisine
-
-    offset = (page- 1) * limit
-    recipes = Recipe.limit(limit).offset(offset)
-    recipes = recipes.where(recipe_cuisine: cuisine) if cuisine
+    offset = (page - 1) * limit
+    recipes = Recipe.fiter_by_cuisine!(cuisine)
+    recipes = recipes.limit(limit).offset(offset)
 
     render json: recipes, status: :ok
+  rescue RuntimeError => e
+    render json: e.message, status: :bad_request
   end
 
   def show
@@ -46,8 +46,4 @@ class RecipesController < ApplicationController
     params.require(:recipe).permit!
   end
 
-  def cuisine_filter_error_message
-    cuisines = Recipe.select(:recipe_cuisine).distinct.pluck(:recipe_cuisine)
-    { error: { message: "one of the type are require as cuisine value (#{cuisines.join(', ')})" } }
-  end
 end
