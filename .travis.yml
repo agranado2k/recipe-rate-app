@@ -3,4 +3,4 @@ rvm:
   - 2.5.0
 script:
   - bin/rake db:migrate RAILS_ENV=test
-  - rspec
+  - bundle exec rspec
