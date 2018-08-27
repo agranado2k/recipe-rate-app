@@ -17,3 +17,5 @@ Metrics/LineLength:
     IgnoredPatterns: ['\A#']
 Metrics/AbcSize:
     Enabled: false
+Gemspec/RequiredRubyVersion:
+    Enabled: false
