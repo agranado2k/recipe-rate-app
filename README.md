@@ -210,4 +210,6 @@ value for the param `limit` as 30 for desktop user agent and 5 for
 mobile user agent.
 solution
 
-## 
+## Last Notes
+The project is on Continuous Integration (CI) System using TravisCI. You can see the build status here(https://travis-ci.org/agranado2k/recipe-rate-app).
+I'm using Rubocop(https://github.com/rubocop-hq/rubocop) gem, Ruby static code analyzer and formatter, to keep consitency in the project.
