@@ -1,3 +1,6 @@
+[![Build
+Status](https://travis-ci.org/agranado2k/recipe-rate-app.svg?branch=master)](https://travis-ci.org/agranado2k/recipe-rate-app)
+ 
 # Simple Recipe API
 
 Challenge to create a simple recipe API
