@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Controller to resoure recipes
 class RecipesController < ApplicationController
   def index
     limit = params[:limit].present? ? params[:limit].to_i : 30
@@ -45,5 +48,4 @@ class RecipesController < ApplicationController
   def recipe_params
     params.require(:recipe).permit!
   end
-
 end

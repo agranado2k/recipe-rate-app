@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Create the Recipe Entity
 class CreateRecipes < ActiveRecord::Migration[5.2]
   def change
     create_table :recipes do |t|
@@ -29,4 +32,3 @@ class CreateRecipes < ActiveRecord::Migration[5.2]
     end
   end
 end
-

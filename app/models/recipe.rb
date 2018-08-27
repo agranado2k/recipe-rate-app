@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Entity Recipe
 class Recipe < ApplicationRecord
   has_many :rates
 
@@ -9,9 +12,10 @@ class Recipe < ApplicationRecord
 
   def self.fiter_by_cuisine!(cuisine)
     unless cuisine
-      cuisines = Recipe.select(:recipe_cuisine).distinct.pluck(:recipe_cuisine)
-      message = { error: { message: "one of the type are require as cuisine value (#{cuisines.join(', ')})" } }.to_json
-      fail message
+      cs = Recipe.select(:recipe_cuisine).distinct.pluck(:recipe_cuisine)
+      msg = "one of the type are require as cuisine value (#{cs.join(', ')})"
+      error = { error: { message: msg } }.to_json
+      raise error
     end
 
     where(recipe_cuisine: cuisine)

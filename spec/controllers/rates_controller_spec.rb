@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe RatesController, type: :controller do
@@ -26,7 +28,9 @@ RSpec.describe RatesController, type: :controller do
     end
 
     context 'rate has to be between 1 and 5' do
-      before { post :create, params: { recipe_id: recipe_id, rate: rate_attrs } }
+      let(:message) { 'rate has to be a integer between 1 and 5' }
+      let(:params) { { recipe_id: recipe_id, rate: rate_attrs } }
+      before { post :create, params: params }
       context 'rate less than 1' do
         let(:rate_attrs) { { rate: 0.9 } }
 
@@ -36,7 +40,7 @@ RSpec.describe RatesController, type: :controller do
 
         it 'returns error message' do
           body = JSON.parse(response.body)
-          expect(body['error']).to eq({ 'message' => 'rate has to be a integer between 1 and 5' })
+          expect(body['error']).to eq('message' => message)
         end
       end
 
@@ -49,7 +53,7 @@ RSpec.describe RatesController, type: :controller do
 
         it 'returns error message' do
           body = JSON.parse(response.body)
-          expect(body['error']).to eq({ 'message' => 'rate has to be a integer between 1 and 5'})
+          expect(body['error']).to eq('message' => message)
         end
       end
     end
